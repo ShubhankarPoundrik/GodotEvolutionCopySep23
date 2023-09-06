@@ -1,0 +1,116 @@
+[gd_scene load_steps=13 format=2]
+
+[ext_resource path="res://Level.gd" type="Script" id=1]
+[ext_resource path="res://Animal.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Plant.tscn" type="PackedScene" id=3]
+[ext_resource path="res://KDTree.tscn" type="PackedScene" id=4]
+[ext_resource path="res://DataDisplay.gd" type="Script" id=5]
+[ext_resource path="res://Pauser.gd" type="Script" id=6]
+[ext_resource path="res://Camera2D.gd" type="Script" id=7]
+[ext_resource path="res://BoderDrawer.gd" type="Script" id=8]
+[ext_resource path="res://NNshow.tscn" type="PackedScene" id=9]
+[ext_resource path="res://PerlinNoiseGen.tscn" type="PackedScene" id=10]
+[ext_resource path="res://Queue.tscn" type="PackedScene" id=11]
+
+[sub_resource type="GDScript" id=1]
+
+[node name="Level" type="Node2D"]
+script = ExtResource( 1 )
+animals = ExtResource( 2 )
+plants = ExtResource( 3 )
+kdtree = ExtResource( 4 )
+
+[node name="UserInputs" type="Node2D" parent="."]
+pause_mode = 2
+script = ExtResource( 6 )
+nnShow = ExtResource( 9 )
+plants = ExtResource( 3 )
+
+[node name="Camera2D" type="Camera2D" parent="."]
+pause_mode = 2
+position = Vector2( 511, 359 )
+current = true
+script = ExtResource( 7 )
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+pause_mode = 2
+
+[node name="DataDisplay" type="RichTextLabel" parent="CanvasLayer"]
+margin_left = 14.0
+margin_top = 10.0
+margin_right = 1013.0
+margin_bottom = 123.0
+script = ExtResource( 5 )
+
+[node name="PlantSpawnerSpinBox" type="SpinBox" parent="CanvasLayer"]
+visible = false
+anchor_left = 0.9
+anchor_top = 0.9
+anchor_right = 0.9
+anchor_bottom = 0.9
+margin_right = 74.0
+margin_bottom = 24.0
+min_value = 1.0
+max_value = 500.0
+value = 300.0
+script = SubResource( 1 )
+
+[node name="BoderDrawer" type="Node2D" parent="."]
+script = ExtResource( 8 )
+
+[node name="NNCanvas" type="CanvasLayer" parent="."]
+pause_mode = 2
+offset = Vector2( 0, 40 )
+transform = Transform2D( 1, 0, 0, 1, 0, 40 )
+
+[node name="AnimalDetailsCanvas" type="CanvasLayer" parent="."]
+
+[node name="SelectedAnimalStatsDisplay" type="RichTextLabel" parent="AnimalDetailsCanvas"]
+anchor_bottom = 1.0
+margin_left = 38.0
+margin_top = 563.0
+margin_right = 721.0
+margin_bottom = -24.0
+
+[node name="PerlinNoiseGen" parent="." instance=ExtResource( 10 )]
+
+[node name="Queue" parent="." instance=ExtResource( 11 )]
+
+[node name="UpdateEnergyTimer" type="Timer" parent="."]
+autostart = true
+
+[node name="ChangeAccnTimer" type="Timer" parent="."]
+wait_time = 0.05
+autostart = true
+
+[node name="CalcTotalEnergyTimer" type="Timer" parent="."]
+wait_time = 30.0
+autostart = true
+
+[node name="GetKDTreeForPlantsTimer" type="Timer" parent="."]
+wait_time = 0.28
+autostart = true
+
+[node name="calcClosestPlant" type="Timer" parent="."]
+wait_time = 0.28
+
+[node name="calcClosestPlantOffsetTimer" type="Timer" parent="."]
+wait_time = 0.14
+one_shot = true
+autostart = true
+
+[node name="CalcClosestAnimal" type="Timer" parent="."]
+wait_time = 0.14
+autostart = true
+
+[node name="GameClockTimer" type="Timer" parent="."]
+autostart = true
+
+[connection signal="timeout" from="UpdateEnergyTimer" to="." method="_on_UpdateEnergyTimer_timeout"]
+[connection signal="timeout" from="ChangeAccnTimer" to="." method="_on_ChangeAccnTimer_timeout"]
+[connection signal="timeout" from="CalcTotalEnergyTimer" to="." method="_on_CalcTotalEnergyTimer_timeout"]
+[connection signal="timeout" from="GetKDTreeForPlantsTimer" to="." method="_on_GetKDTreeForPlantsTimer_timeout"]
+[connection signal="timeout" from="calcClosestPlant" to="." method="_on_calcClosestPlant_timeout"]
+[connection signal="timeout" from="calcClosestPlantOffsetTimer" to="." method="_on_calcClosestPlantOffestTimer_timeout"]
+[connection signal="timeout" from="CalcClosestAnimal" to="." method="_on_CalcClosestAnimal_timeout"]
+[connection signal="timeout" from="GameClockTimer" to="." method="_on_GameClockTimer_timeout"]
